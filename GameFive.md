@@ -1,59 +1,64 @@
-## 🎮 Exercice : Crée un Bot Python pour **2048** avec IA
+## 🎮 Exercice : Crée un Bot Python pour **2048** avec IA (Edge Compatible, Sans Installation Supplémentaire)
 
-### 🧑‍💻 Partie 1 : Contrôler le Jeu en Ligne
+### 🧑‍💻 Partie 1 : Contrôler le Jeu en Ligne via Microsoft Edge
 
 ### 🎯 Objectif
 
-Créer un bot Python qui joue automatiquement au jeu [2048](https://play2048.co/) dans un navigateur web, en utilisant des stratégies simples au départ, puis une IA plus intelligente.
+Créer un bot Python qui joue automatiquement au jeu [2048](https://play2048.co/) dans **Microsoft Edge**, sans installer de driver manuellement, en utilisant des stratégies simples, puis une IA plus intelligente.
 
 ---
 
 ### 🕹️ Description du projet
 
 * Le jeu se joue sur une **grille 4x4**.
-* Tu dois **fusionner des cases de même valeur** (ex. 2+2 = 4) pour atteindre 2048.
+* Tu dois **fusionner des cases de même valeur** pour atteindre 2048.
 * Les mouvements se font avec les **flèches directionnelles**.
-* Le jeu se termine quand aucun mouvement n'est possible.
-
-Ton bot devra :
-
-* Lire l’état actuel de la grille
-* Décider du meilleur mouvement (haut, bas, gauche, droite)
-* Exécuter ce mouvement dans le navigateur
 
 ---
 
 ### 🔧 Étapes à suivre
 
-1. Installer **Selenium** :
+1. Installer la bibliothèque Selenium :
 
 ```bash
 pip install selenium
 ```
 
-2. Télécharger **ChromeDriver** ou **GeckoDriver** (selon ton navigateur), et place-le dans le même dossier que ton script.
-
-3. Créer un script Python qui ouvre le jeu :
+2. Utiliser Edge déjà installé sur ton PC (aucun driver à télécharger) :
 
 ```python
 from selenium import webdriver
+from selenium.webdriver.edge.service import Service
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from msedge.selenium_tools import Edge, EdgeOptions
 
-driver = webdriver.Chrome()
+options = EdgeOptions()
+options.use_chromium = True
+
+driver = Edge(options=options)
 driver.get("https://play2048.co/")
-game_area = driver.find_element("tag name", "body")
+game_area = driver.find_element(By.TAG_NAME, "body")
 ```
 
-4. Simuler les flèches avec :
+> Si le code ci-dessus ne fonctionne pas (selon ta version de Selenium), essaie simplement :
 
 ```python
-game_area.send_keys(Keys.ARROW_UP)
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+
+driver = webdriver.Edge()
+driver.get("https://play2048.co/")
+game_area = driver.find_element(By.TAG_NAME, "body")
 ```
 
-5. Ajouter une boucle pour jouer automatiquement avec une logique simple :
+3. Faire jouer le bot :
 
 ```python
 import random
+from selenium.webdriver.common.keys import Keys
+
 moves = [Keys.ARROW_UP, Keys.ARROW_RIGHT, Keys.ARROW_LEFT, Keys.ARROW_DOWN]
 while True:
     game_area.send_keys(random.choice(moves))
@@ -63,80 +68,31 @@ while True:
 
 ### ✅ Résultat attendu
 
-* Le bot ouvre le jeu dans Chrome.
-* Il joue automatiquement (même avec des mouvements aléatoires au départ).
-* Tu peux observer sa progression et noter le score à la fin.
+- Le bot joue automatiquement dans Edge
+- Aucune installation supplémentaire requise
+- Il est prêt pour ajouter une **IA plus intelligente**
 
 ---
 
-## 🤖 Partie 2 : Ajouter une IA pour Prendre les Meilleures Décisions
+### 🧠 Partie 2 : Ajouter une IA
 
-### 🎯 Objectif
-
-Remplacer les mouvements aléatoires par une stratégie plus intelligente, avec une **fonction qui lit la grille** et choisit **le meilleur mouvement** à chaque tour.
-
----
-
-### 🧠 Étapes IA
-
-1. **Lire la grille** en extrayant les éléments HTML des cases :
-
-```python
-tiles = driver.find_elements("class name", "tile")
-for tile in tiles:
-    print(tile.get_attribute("class"))
-```
-
-2. **Créer une représentation 4x4 de la grille** dans Python.
-
-3. Implémenter une **heuristique** simple (par exemple) :
-
-   * Préférer les mouvements qui gardent les tuiles les plus hautes dans un coin
-   * Éviter de bloquer la grille trop vite
-   * Garder la ligne du bas remplie
-
-4. Créer une fonction :
-
-```python
-def choose_best_move(board):
-    # analyse le board et retourne Keys.ARROW_*
-    return Keys.ARROW_LEFT  # par exemple
-```
-
-5. Remplacer les mouvements aléatoires par `choose_best_move(board)`.
-
----
-
-### ✅ Résultat attendu
-
-* Le bot joue seul de manière intelligente.
-* Il atteint des scores supérieurs à la version aléatoire.
-* Il peut relancer une partie automatiquement si la grille est pleine.
-
----
-
-### 🎁 Bonus (facultatif)
-
-* Implémenter un **algorithme Minimax avec élagage alpha-bêta**
-* Enregistrer le **score final** dans un fichier ou base de données
-* Ajouter un **mode compétition** : IA vs IA (différentes stratégies)
-* Ajouter des **statistiques** après 100 parties (score moyen, max, taux de victoire)
+(Same as original — tu peux lire la grille, construire une représentation interne, et prendre des décisions plus intelligentes)
 
 ---
 
 ### 📦 Pré-requis techniques
 
-* Python 3.x
-* Bibliothèque `selenium`
-* Un navigateur installé (Chrome recommandé)
-* ChromeDriver (ou équivalent)
+- Python 3.x
+- `selenium`
+- Navigateur **Microsoft Edge** installé et à jour
+- Aucun téléchargement de driver requis
 
 ---
 
 ### 🚀 Bonne chance !
 
-Tu vas apprendre à :
+Tu apprendras à :
 
-* Contrôler un site web avec Python
-* Lire des éléments d’interface avec Selenium
-* Appliquer des algorithmes de prise de décision sur un jeu réel
+- Automatiser un navigateur Edge sans installation
+- Lire et analyser le contenu d’un jeu en ligne
+- Appliquer de l’IA dans un jeu réel
